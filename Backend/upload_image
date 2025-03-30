@@ -1,0 +1,238 @@
+# from PIL import Image
+# import pytesseract
+# import os
+
+# from pdf2image import convert_from_path
+
+
+# def extract_text_from_image(path):
+#     file_ext = os.path.splitext(path)[1].lower()  # NEW: get file extension
+
+#     if not os.path.exists(path):
+#         print("❌ File not found at path:", path)
+#         return
+
+#     try:
+#         if file_ext == ".pdf":
+#             print("📄 Processing PDF...")
+#             images = convert_from_path(path)  # Convert PDF pages to images
+#             for i, page in enumerate(images):
+#                 print(f"\n📝 Page {i + 1} Text:\n")
+#                 text = pytesseract.image_to_string(page)
+#                 print(text)
+
+#         elif file_ext in [".png", ".jpg", ".jpeg"]:
+#             print("🖼️ Processing image...")
+#             img = Image.open(path)
+#             text = pytesseract.image_to_string(img)
+#             print("\n📝 Extracted Text:\n")
+#             print(text)
+#         else:
+#             print("❌ Unsupported file type:", file_ext)
+
+#     except Exception as e:
+#         print("❌ Error processing file:", e)
+
+# def main():
+#     path = input("📁 Enter the full path to your PNG, JPG, or PDF file: ").strip()
+#     extract_text_from_image(path)
+
+# if __name__ == "__main__":
+#     main()
+
+
+import cv2
+from PIL import Image
+import pytesseract
+import os
+from pdf2image import convert_from_path
+# import re
+
+def extract_text_from_file(path):
+    file_ext = os.path.splitext(path)[1].lower()
+    text = ""
+
+    if not os.path.exists(path):
+        print("File not found at path:", path)
+        return ""
+
+    try:
+        if file_ext == ".pdf":
+            print("📄 Processing PDF...")
+            images = convert_from_path(path)
+            for i, page in enumerate(images):
+                page_text = pytesseract.image_to_string(page)
+                print(f"\n📝 Page {i + 1} Text:\n{page_text}")
+                text += page_text + "\n"
+
+        elif file_ext in [".png", ".jpg", ".jpeg"]:
+            print("🖼️ Processing image...")
+            img = Image.open(path)
+            text = pytesseract.image_to_string(img)
+            print("\n📝 Extracted Text:\n")
+            print(text)
+        else:
+            print("Unsupported file type:", file_ext)
+
+    except Exception as e:
+        print("Error processing file:", e)
+
+    return text
+
+def capture_image_from_camera(filename="captured_form.jpg"):
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        print("Cannot open webcam.")
+        return None
+
+    print("📷 Press 'c' to capture or 'q' to quit.")
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            print("Failed to grab frame.")
+            break
+
+        cv2.imshow("Camera - Press 'c' to capture", frame)
+        key = cv2.waitKey(1)
+        if key == ord('c'):
+            cv2.imwrite(filename, frame)
+            print(f"Image saved as {filename}")
+            break
+        elif key == ord('q'):
+            print("Capture cancelled.")
+            filename = None
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+    return filename
+
+# we have captured images and uploaded images or pdfs. now we have to recognize blank spaces. 
+
+# def detect_blank_fields(text):
+#     lines = text.splitlines()
+#     fields = []
+
+#     for line in lines:
+#         line = line.strip()
+#         # Detect lines with two vertical bars or boxes
+#         if "| |" in line or re.search(r"\|\s*\|", line):
+#             parts = line.split("|")
+#             if len(parts) >= 1 and parts[0].strip():
+#                 fields.append(parts[0].strip())
+
+#         # Detect common field names with space after them
+#         elif re.match(r"(Full Name|Email Address|Phone Number|Date of Birth|Address|Description)", line, re.IGNORECASE):
+#             fields.append(line.strip())
+
+#     fields = list(set(fields))  # Remove duplicates
+#     print("\n🧠 Detected form fields:", fields)
+#     return fields
+
+
+# def map_fields_to_docs(fields):
+#     field_to_doc = {
+#         "Name": "passport",
+#         "Date of Birth": "passport or birth certificate",
+#         "Address": "driver's license or utility bill",
+#         "Phone Number": "any ID with contact info",
+#     }
+#     required_docs = set()
+#     for field in fields:
+#         doc = field_to_doc.get(field)
+#         if doc:
+#             required_docs.add(doc)
+#     print("📂 Please upload or capture these documents:", list(required_docs))
+#     return list(required_docs)
+
+# def get_user_docs_and_extract(fields):
+#     extracted = {}
+#     for field in fields:
+#         input(f"\n📸 Upload or capture a document containing '{field}' and press Enter...")
+#         doc_path = input("Enter path to the document image: ").strip()
+#         try:
+#             text = pytesseract.image_to_string(Image.open(doc_path))
+#             if "name" in field.lower():
+#                 match = re.search(r"Name[:\-]?\s*([A-Z][a-z]+\s[A-Z][a-z]+)", text)
+#             elif "birth" in field.lower():
+#                 match = re.search(r"(\d{2}/\d{2}/\d{4})", text)
+#             elif "address" in field.lower():
+#                 match = re.search(r"\d{1,5}\s+[\w\s]+(?:Street|St|Ave|Avenue|Rd|Road)", text)
+#             else:
+#                 match = None
+
+#             if match:
+#                 extracted[field] = match.group(1)
+#                 print(f"✅ Found '{field}': {match.group(1)}")
+#             else:
+#                 print(f"❌ Could not find '{field}' in document.")
+
+#         except Exception as e:
+#             print("❌ Error processing document:", e)
+#     return extracted
+
+
+
+# def fill_form(fields, extracted_data):
+#     print("\n📝 Form Summary:")
+#     for field in fields:
+#         value = extracted_data.get(field, "[Not Filled]")
+#         print(f"{field}: {value}")
+
+
+
+# def main():
+#     print("Welcome to FormFriend OCR!")
+#     while True:
+#         method = input("📂 Type 'u' to upload a file or 'c' to capture from camera: ").lower().strip()
+
+#         if method == 'u':
+#             path = input("Enter the full path to your PNG, JPG, or PDF file: ").strip()
+#             text = extract_text_from_file(path)
+
+#         elif method == 'c':
+#             captured = capture_image_from_camera()
+#             text = extract_text_from_file(captured) if captured else ""
+
+#         else:
+#             print("Invalid input. Please type 'u' or 'c'.")
+#             continue  # restart the loop
+
+#         if text:
+#             fields = detect_blank_fields(text)
+#             required_docs = map_fields_to_docs(fields)
+#             extracted_info = get_user_docs_and_extract(fields)
+#             fill_form(fields, extracted_info)
+
+#         again = input("\n🔁 Do you want to process another file or image? (y/n): ").lower().strip()
+#         if again != 'y':
+#             print("Done! Thanks for using FormFriend.")
+#             break
+
+
+
+def main():
+    print("Welcome to FormFriend OCR!")
+    while True:
+        method = input("📂 Type 'u' to upload a file or 'c' to capture from camera: ").lower().strip()
+
+        if method == 'u':
+            path = input("Enter the full path to your PNG, JPG, or PDF file: ").strip()
+            extract_text_from_file(path)
+
+        elif method == 'c':
+            captured = capture_image_from_camera()
+            if captured:
+                extract_text_from_file(captured)
+
+        else:
+            print("Invalid input. Please type 'u' or 'c'.")
+
+        again = input("\n🔁 Do you want to process another file or image? (y/n): ").lower().strip()
+        if again != 'y':
+            print("Done! Thanks for using FormFriend.")
+            break
+
+if __name__ == "__main__":
+    main()
+
