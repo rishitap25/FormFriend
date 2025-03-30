@@ -5,7 +5,11 @@ import { cn } from "@/lib/utils"
 interface FeatureButtonProps {
   href: string
   icon: ReactNode
+<<<<<<< HEAD
   label: string
+=======
+  title: React.ReactNode;
+>>>>>>> 5dd8fe9 (Fix: useTranslation hook in language selector and other components)
   color: string
   className?: string
 }

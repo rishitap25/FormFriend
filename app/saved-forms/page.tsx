@@ -1,15 +1,25 @@
 "use client"
 
+import { useTranslation } from "@/hooks/use-translation"
+
 import { useState, useEffect } from "react"
 import { useLanguage } from "@/components/language-provider"
 import Navbar from "@/components/navbar"
 import { Button } from "@/components/ui/button"
+<<<<<<< HEAD
 import { Card, CardContent } from "@/components/ui/card"
 import { Eye, Trash2, Languages, HelpCircle, CheckSquare } from "lucide-react"
 import { getSavedForms, deleteForm, type SavedForm } from "@/lib/form-storage"
+=======
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Eye, Trash2, FileText } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
+import { getSavedForms, deleteForm, type SavedForm } from "@/lib/storage"
+>>>>>>> 5dd8fe9 (Fix: useTranslation hook in language selector and other components)
 import Link from "next/link"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { useToast } from "@/hooks/use-toast"
+
 
 export default function SavedFormsPage() {
   const { t } = useLanguage()
