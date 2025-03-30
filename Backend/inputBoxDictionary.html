@@ -1,0 +1,12 @@
+<input type="text" id="wordInput" placeholder="Enter a word to translate">
+<button onclick="translateWord()">Translate</button>
+<p id="translatedWord"></p>
+
+<script>
+async function translateWord() {
+    const word = document.getElementById("wordInput").value;
+    const response = await fetch(`/translate?word=${word}`);
+    const translation = await response.text();
+    document.getElementById("translatedWord").innerText = `Translation: ${translation}`;
+}
+</script>
