@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FormFriend Upload</title>
+</head>
+<body>
+  <h2>📂 Upload or Capture a Form</h2>
+
+  <form method="POST" action="/process" enctype="multipart/form-data" onsubmit="return prepareSubmission()">
+    <label>
+      <input type="radio" name="method" value="upload" checked onchange="toggleMethod()"> Upload File
+    </label>
+    <input type="file" name="form_file" id="fileInput"><br><br>
+
+    <label>
+      <input type="radio" name="method" value="capture" onchange="toggleMethod()"> Use Camera
+    </label><br>
+
+    <div id="cameraSection" style="display:none;">
+      <video id="video" width="400" autoplay></video><br>
+      <button type="button" onclick="capture()">📸 Capture</button><br><br>
+      <canvas id="canvas" width="400" height="300" style="display:none;"></canvas>
+      <input type="hidden" name="captured_image" id="captured_image">
+    </div>
+
+    <input type="submit" value="Submit">
+  </form>
+
+  <script>
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const capturedInput = document.getElementById("captured_image");
+
+    function toggleMethod() {
+      const useCamera = document.querySelector('input[name="method"]:checked').value === "capture";
+      document.getElementById("cameraSection").style.display = useCamera ? "block" : "none";
+      document.getElementById("fileInput").disabled = useCamera;
+
+      if (useCamera) {
+        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+          video.srcObject = stream;
+        }).catch(err => {
+          alert("⚠️ Could not access camera: " + err.message);
+        });
+      }
+    }
+
+    function capture() {
+      const context = canvas.getContext("2d");
+      canvas.style.display = "block";
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      capturedInput.value = canvas.toDataURL("image/png");
+      alert("✅ Image captured! Now hit Submit.");
+    }
+
+    function prepareSubmission() {
+      const method = document.querySelector('input[name="method"]:checked').value;
+      if (method === "capture" && !capturedInput.value) {
+        alert("⚠️ Please capture an image before submitting.");
+        return false;
+      }
+      return true;
+    }
+  </script>
+</body>
+</html>
+

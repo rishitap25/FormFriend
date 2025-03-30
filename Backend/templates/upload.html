@@ -1,0 +1,110 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FormFriend Uploader</title>
+</head>
+<body>
+  <h1>📥 Upload Form and Supporting Document</h1>
+
+  <form action="/process" method="POST" enctype="multipart/form-data">
+    <label>Upload Form (PDF or Image):</label><br>
+    <input type="file" name="form_file" accept=".pdf,.png,.jpg,.jpeg" required><br><br>
+
+    <label>Upload Supporting Document (e.g., passport):</label><br>
+    <input type="file" name="supporting_doc" accept=".png,.jpg,.jpeg" required><br><br>
+
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FormFriend Uploader</title>
+  <style>
+    video, canvas {
+      display: block;
+      margin-bottom: 10px;
+      max-width: 400px;
+    }
+  </style>
+</head>
+<body>
+  <h1> Upload or Capture Form + Document</h1>
+
+  <form id="uploadForm" action="/process" method="POST" enctype="multipart/form-data">
+    <label>Upload Form (PDF or Image):</label><br>
+    <input type="file" name="form_file" accept=".pdf,.png,.jpg,.jpeg"><br><br>
+
+    <label>Upload Supporting Document:</label><br>
+    <input type="file" name="supporting_doc" accept="image/*"><br><br>
+
+    <button type="submit">Submit Files</button>
+  </form>
+
+  <hr>
+
+  <h2>📸 Or Capture Image from Camera</h2>
+
+  <video id="video" autoplay></video>
+  <button onclick="capture()">Capture</button>
+  <canvas id="canvas" style="display:none;"></canvas>
+  <br>
+  <button onclick="submitCaptured()">Submit Captured Image</button>
+
+  <script>
+    const video = document.getElementById("video");
+    navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+        video.srcObject = stream;
+    })
+    .catch(err => {
+        alert("⚠️ Could not access camera: " + err.message);
+    });
+
+    let capturedBlob = null;
+  
+    function capture() {
+      canvas.style.display = "block";
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0);
+  
+      canvas.toBlob(blob => {
+        capturedBlob = blob;
+        alert("✅ Image captured! Now click 'Submit Captured Image'");
+      }, "image/png");
+    }
+  
+    function submitCaptured() {
+      if (!capturedBlob) {
+        alert("Please capture an image first.");
+        return;
+      }
+  
+      const formData = new FormData();
+      const file = new File([capturedBlob], "captured.png", { type: "image/png" });
+  
+      // Send captured image as both form and supporting doc (for now)
+      formData.append("form_file", file);
+      formData.append("supporting_doc", file);
+  
+      fetch("/process", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.text())
+      .then(html => {
+        document.body.innerHTML = html;
+      })
+      .catch(err => console.error("Upload failed:", err));
+    }
+  </script>
+  
+</body>
+</html>
+
