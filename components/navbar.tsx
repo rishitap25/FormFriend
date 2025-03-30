@@ -1,33 +1,34 @@
 "use client"
 
-<<<<<<< HEAD
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem
+} from "@/components/ui/dropdown-menu"
+
+import { useTranslation } from "@/hooks/use-translation"
 import { useLanguage } from "@/components/language-provider"
+import { usePathname } from "next/navigation"
+import Link from "next/link"
+
 import { Button } from "@/components/ui/button"
 import { Home, FileText, Languages } from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-=======
-import { useTranslation } from "@/hooks/use-translation"
-
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Home, Menu, X } from "lucide-react"
-import LanguageSelector from "@/components/language-selector"
->>>>>>> 5dd8fe9 (Fix: useTranslation hook in language selector and other components)
 
 export default function Navbar() {
   const { t, language, setLanguage } = useLanguage()
   const pathname = usePathname()
-
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-primary text-primary-foreground p-3 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <Link href="/">
-            <Button variant={pathname === "/" ? "secondary" : "ghost"} size="sm" className="text-primary-foreground">
+            <Button
+              variant={pathname === "/" ? "secondary" : "ghost"}
+              size="sm"
+              className="text-primary-foreground"
+            >
               <Home className="h-5 w-5 mr-1" />
               <span className="hidden sm:inline">{t("home")}</span>
             </Button>
@@ -82,11 +83,21 @@ export default function Navbar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setLanguage("en")}>English {language === "en" && "✓"}</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setLanguage("es")}>Español {language === "es" && "✓"}</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setLanguage("zh")}>中文 {language === "zh" && "✓"}</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setLanguage("fr")}>Français {language === "fr" && "✓"}</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setLanguage("ar")}>العربية {language === "ar" && "✓"}</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLanguage("en")}>
+                English {language === "en" && "✓"}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLanguage("es")}>
+                Español {language === "es" && "✓"}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLanguage("zh")}>
+                中文 {language === "zh" && "✓"}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLanguage("fr")}>
+                Français {language === "fr" && "✓"}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLanguage("ar")}>
+                العربية {language === "ar" && "✓"}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -94,4 +105,3 @@ export default function Navbar() {
     </nav>
   )
 }
-

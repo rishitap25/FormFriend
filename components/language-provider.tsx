@@ -3,7 +3,7 @@
 import type React from "react"
 import { createContext, useContext, useState, useEffect } from "react"
 
-type Language = "en" | "es" | "zh" | "fr" | "ar"
+type Language = "en" | "es" | "zh" | "fr" | "ar" | "ru"
 
 type Translations = {
   [key: string]: {
@@ -18,6 +18,7 @@ const translations: Translations = {
     zh: "欢迎使用FormFriend",
     fr: "Bienvenue sur FormFriend",
     ar: "مرحبًا بك في FormFriend",
+    ru: "Добро пожаловать в FormFriend",
   },
   mySavedForms: {
     en: "My Saved Forms",
@@ -25,6 +26,7 @@ const translations: Translations = {
     zh: "我保存的表格",
     fr: "Mes Formulaires Enregistrés",
     ar: "نماذجي المحفوظة",
+    ru: "Мои сохраненные формы",
   },
   translateSources: {
     en: "Translate Sources",
@@ -32,6 +34,7 @@ const translations: Translations = {
     zh: "翻译源文件",
     fr: "Traduire les Sources",
     ar: "ترجمة المصادر",
+    ru: "Перевести источники",
   },
   explainTerms: {
     en: "Explain Terms",
@@ -39,6 +42,7 @@ const translations: Translations = {
     zh: "解释术语",
     fr: "Expliquer les Termes",
     ar: "شرح المصطلحات",
+    ru: "Объяснить термины",
   },
   checkList: {
     en: "Check List",
@@ -46,6 +50,7 @@ const translations: Translations = {
     zh: "检查清单",
     fr: "Liste de Vérification",
     ar: "قائمة التحقق",
+    ru: "Контрольный список",
   },
   formTranslation: {
     en: "Form Translation",
@@ -53,6 +58,7 @@ const translations: Translations = {
     zh: "表格翻译",
     fr: "Traduction de Formulaire",
     ar: "ترجمة النموذج",
+    ru: "Перевод формы",
   },
   scan: {
     en: "Scan",
@@ -60,6 +66,7 @@ const translations: Translations = {
     zh: "扫描",
     fr: "Scanner",
     ar: "مسح",
+    ru: "Сканировать",
   },
   termExplanation: {
     en: "Term Explanation",
@@ -67,6 +74,7 @@ const translations: Translations = {
     zh: "术语解释",
     fr: "Explication des Termes",
     ar: "شرح المصطلح",
+    ru: "Объяснение термина",
   },
   askQuestion: {
     en: "Ask a question about a term...",
@@ -74,6 +82,7 @@ const translations: Translations = {
     zh: "询问有关术语的问题...",
     fr: "Posez une question sur un terme...",
     ar: "اسأل سؤالاً حول مصطلح...",
+    ru: "Задайте вопрос о термине...",
   },
   documentChecklist: {
     en: "Document Checklist",
@@ -81,6 +90,7 @@ const translations: Translations = {
     zh: "文件清单",
     fr: "Liste de Documents",
     ar: "قائمة المستندات",
+    ru: "Список документов",
   },
   scanDocuments: {
     en: "Scan Documents",
@@ -88,6 +98,7 @@ const translations: Translations = {
     zh: "扫描文件",
     fr: "Scanner les Documents",
     ar: "مسح المستندات",
+    ru: "Сканировать документы",
   },
   savedForms: {
     en: "Saved Forms",
@@ -95,6 +106,7 @@ const translations: Translations = {
     zh: "已保存表格",
     fr: "Formulaires Enregistrés",
     ar: "النماذج المحفوظة",
+    ru: "Сохраненные формы",
   },
   autoFill: {
     en: "Auto-fill?",
@@ -102,6 +114,7 @@ const translations: Translations = {
     zh: "自动填充？",
     fr: "Remplissage Automatique?",
     ar: "ملء تلقائي؟",
+    ru: "Автозаполнение?",
   },
   view: {
     en: "View",
@@ -109,6 +122,7 @@ const translations: Translations = {
     zh: "查看",
     fr: "Voir",
     ar: "عرض",
+    ru: "Просмотр",
   },
   home: {
     en: "Home",
@@ -116,6 +130,7 @@ const translations: Translations = {
     zh: "首页",
     fr: "Accueil",
     ar: "الرئيسية",
+    ru: "Главная",
   },
   selectLanguage: {
     en: "Select Language",
@@ -123,6 +138,7 @@ const translations: Translations = {
     zh: "选择语言",
     fr: "Sélectionner la Langue",
     ar: "اختر اللغة",
+    ru: "Выбрать язык",
   },
 }
 
@@ -132,7 +148,7 @@ type LanguageContextType = {
   t: (key: string) => string
 }
 
-const LanguageContext = createContext<LanguageContextType>({
+export const LanguageContext = createContext<LanguageContextType>({
   language: "en",
   setLanguage: () => {},
   t: () => "",
@@ -173,4 +189,3 @@ export const LanguageProvider = ({
     </LanguageContext.Provider>
   )
 }
-
