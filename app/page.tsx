@@ -1,89 +1,81 @@
+"use client"
+
+import { useLanguage } from "@/components/language-provider"
+import Navbar from "@/components/navbar"
+import FeatureButton from "@/components/feature-button"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { FileText, Languages, HelpCircle, CheckSquare } from "lucide-react"
 import Link from "next/link"
-import { Header } from "@/components/header"
-import { FeatureCard } from "@/components/feature-card"
-import { LanguageSwitcher } from "@/components/language-switcher"
+import { motion } from "framer-motion"
 
-export default function HomePage() {
+export default function Home() {
+  const { t } = useLanguage()
+
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
+    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
+      <Navbar />
 
-      <div className="container px-4 py-6 md:py-12 flex-1">
-        <div className="flex flex-col items-center text-center mb-8 md:mb-12">
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Welcome to FormFriend</h1>
-          <p className="text-lg text-muted-foreground max-w-[700px] mb-6">
-            Helping immigrant families navigate paperwork with translations, guidance, and support
+      <div className="container mx-auto pt-24 pb-10 px-4">
+        {/* Animated Heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-10"
+        >
+          <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+            {t("welcome")}
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Helping immigrant families navigate paperwork with ease
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button asChild size="lg">
-              <Link href="/upload">Start New Form</Link>
-            </Button>
-            <Button variant="outline" asChild size="lg">
-              <Link href="/saved">My Saved Forms</Link>
-            </Button>
-          </div>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          <FeatureCard
-            title="Form Translation"
-            description="Upload forms and get translations in your preferred language"
-            icon="FileText"
-          />
-          <FeatureCard
-            title="Term Explanations"
-            description="Get simple explanations for complex terms and requirements"
-            icon="HelpCircle"
-          />
-          <FeatureCard
-            title="Document Checklist"
-            description="Generate lists of required documents based on form type"
-            icon="CheckSquare"
-          />
-          <FeatureCard
-            title="Chat Assistance"
-            description="Answer questions to automatically fill out forms"
-            icon="MessageSquare"
-          />
-          <FeatureCard
-            title="Voice Translation"
-            description="Speak in your language and translate for officials"
-            icon="Mic"
-          />
-          <FeatureCard
-            title="Privacy First"
-            description="Your information stays on your device for privacy"
-            icon="Lock"
-          />
-        </div>
+        {/* Animated Main Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex justify-center mb-12"
+        >
+          <Link href="/saved-forms">
+            <Button
+              size="lg"
+              className="bg-accent hover:bg-accent/90 text-white"
+            >
+              <FileText className="mr-2 h-5 w-5" />
+              {t("mySavedForms")}
+            </Button>
+          </Link>
+        </motion.div>
 
-        <Card className="mb-8">
-          <CardContent className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Choose Your Language</h2>
-            <LanguageSwitcher />
-          </CardContent>
-        </Card>
+        {/* Animated Feature Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="flex flex-wrap justify-center gap-6 mb-16"
+        >
+          <FeatureButton
+            href="/translate"
+            icon={<Languages />}
+            label={t("translateSources")}
+            color="bg-[#58508d]"
+          />
+          <FeatureButton
+            href="/explain"
+            icon={<HelpCircle />}
+            label={t("explainTerms")}
+            color="bg-[#bc5090]"
+          />
+          <FeatureButton
+            href="/checklist"
+            icon={<CheckSquare />}
+            label={t("checkList")}
+            color="bg-[#ff6361]"
+          />
+        </motion.div>
       </div>
-
-      <footer className="border-t py-6 md:py-0">
-        <div className="container flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left md:h-16">
-          <p className="text-sm text-muted-foreground">© 2025 FormFriend. All rights reserved.</p>
-          <div className="flex items-center gap-4">
-            <Link href="/privacy" className="text-sm text-muted-foreground hover:underline">
-              Privacy
-            </Link>
-            <Link href="/terms" className="text-sm text-muted-foreground hover:underline">
-              Terms
-            </Link>
-            <Link href="/help" className="text-sm text-muted-foreground hover:underline">
-              Help
-            </Link>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }
-
